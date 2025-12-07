@@ -1,0 +1,10 @@
+# Ignore huge folders
+node_modules/
+venv/
+__pycache__/
+
+# Ignore database and secrets
+db.sqlite3
+*.pyc
+.DS_Store
+.env
