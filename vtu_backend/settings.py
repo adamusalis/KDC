@@ -133,6 +133,7 @@ AUTH_USER_MODEL = 'accounts.CustomUser'
 # CORS Configuration
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173",
+    "http://127.0.0.1:5173",
     "http://https://kdc-u00n.onrender.com",
 ]
 # Tells Django REST Framework to accept Tokens
