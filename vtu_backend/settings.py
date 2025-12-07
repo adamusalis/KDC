@@ -76,20 +76,20 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'vtu_backend.wsgi.application'
 
-
-# Database
-# https://docs.djangoproject.com/en/6.0/ref/settings/#databases
+# Database Configuration
+# This logic says: "Use the Cloud Database if available, otherwise use the local file."
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'vtu_db',
-        'USER': 'vtu_user',
-        'PASSWORD': 'secure_password',
-        'HOST': 'localhost',
-        'PORT': '5432',
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
+
+# If we are on Render, this will override the default above with the real database
+import dj_database_url
+db_from_env = dj_database_url.config(conn_max_age=600)
+DATABASES['default'].update(db_from_env)
 
 # Password validation
 # https://docs.djangoproject.com/en/6.0/ref/settings/#auth-password-validators
