@@ -1,9 +1,15 @@
 from django.contrib import admin
-from django.urls import path, include  # <--- Import 'include'
+from django.urls import path, include
+from . import views
 
 urlpatterns = [
+    # 1. The new Home path
+    path('', views.home, name='home'),
+
+    # 2. Admin path
     path('admin/', admin.site.urls),
-    path('api/services/', include('services.urls')), # <--- Add this line
-    path('api/auth/', include('accounts.urls')),
-    path('api/transaction/', include('transactions.urls')),
+
+    path('api/services/', include('services.urls')),
+    path('api/auth/', include('authentication.urls')),
+    path('api/transaction/', include('transaction.urls')),
 ]
