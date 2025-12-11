@@ -11,6 +11,6 @@ urlpatterns = [
 
     # 3. Your API Paths
     path('api/services/', include('services.urls')),
-    path('api/auth/', include('authentication.urls')),
+    path('api/auth/', include('accounts.urls')),
     path('api/transaction/', include('transaction.urls')),
 ]
