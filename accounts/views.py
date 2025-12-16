@@ -22,11 +22,14 @@ def register_user(request):
 @api_view(['POST'])
 @permission_classes([AllowAny])
 def login_user(request):
-    phone_number = request.data.get('phone_number')
+    # --- THE FIX IS HERE ---
+    # We now look for 'username' because that is what your frontend sends
+    username = request.data.get('username')
     password = request.data.get('password')
-   
-    user = authenticate(username=phone_number, password=password)
-   
+
+    # Authenticate the user
+    user = authenticate(username=username, password=password)
+
     if user:
         token, created = Token.objects.get_or_create(user=user)
         return Response({
