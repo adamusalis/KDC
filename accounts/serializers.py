@@ -1,24 +1,25 @@
 from rest_framework import serializers
 from django.contrib.auth.models import User
 
-# Serializer for User Data (Profile)
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ['id', 'username', 'email', 'first_name', 'last_name']
 
-# Serializer for Registration (The Critical Part)
 class RegisterSerializer(serializers.ModelSerializer):
+    # EXPLICITLY DEFINE phone_number so it doesn't crash the default User model
+    phone_number = serializers.CharField(required=False, allow_blank=True)
+
     class Meta:
         model = User
+        # We include 'phone_number' here now that it is defined above
         fields = ['username', 'password', 'email', 'first_name', 'last_name', 'phone_number']
-        # Note: If your User model doesn't have phone_number, remove it from fields above
 
     def create(self, validated_data):
-        # This handles the phone_number field if it's passed but not in the default User model
+        # Remove phone_number before creating the user (since User model doesn't have it)
         phone = validated_data.pop('phone_number', '')
        
-        # CRITICAL FIX: We use 'create_user' to properly encrypt the password
+        # Create the user safely
         user = User.objects.create_user(
             username=validated_data['username'],
             password=validated_data['password'],
