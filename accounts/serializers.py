@@ -20,6 +20,7 @@ class RegisterSerializer(serializers.ModelSerializer):
         phone = validated_data.pop('phone_number', '')
        
         # Create the user safely
+        # Create the user safely
         user = User.objects.create_user(
             username=validated_data['username'],
             password=validated_data['password'],
