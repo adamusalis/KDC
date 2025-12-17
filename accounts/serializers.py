@@ -1,26 +1,29 @@
 from rest_framework import serializers
-from django.contrib.auth import get_user_model
+from django.contrib.auth.models import User
 
-User = get_user_model()
-
+# Serializer for User Data (Profile)
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ['id', 'phone_number', 'email', 'wallet_balance', 'transaction_pin']
-        read_only_fields = ['wallet_balance'] # Users can't change their own balance!
+        fields = ['id', 'username', 'email', 'first_name', 'last_name']
 
+# Serializer for Registration (The Critical Part)
 class RegisterSerializer(serializers.ModelSerializer):
-    password = serializers.CharField(write_only=True)
-
     class Meta:
         model = User
-        fields = ['phone_number', 'email', 'password', 'transaction_pin']
+        fields = ['username', 'password', 'email', 'first_name', 'last_name', 'phone_number']
+        # Note: If your User model doesn't have phone_number, remove it from fields above
 
     def create(self, validated_data):
+        # This handles the phone_number field if it's passed but not in the default User model
+        phone = validated_data.pop('phone_number', '')
+       
+        # CRITICAL FIX: We use 'create_user' to properly encrypt the password
         user = User.objects.create_user(
-            phone_number=validated_data['phone_number'],
-            email=validated_data['email'],
+            username=validated_data['username'],
             password=validated_data['password'],
-            transaction_pin=validated_data.get('transaction_pin')
+            email=validated_data.get('email', ''),
+            first_name=validated_data.get('first_name', ''),
+            last_name=validated_data.get('last_name', '')
         )
         return user
